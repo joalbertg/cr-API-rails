@@ -22,8 +22,6 @@ gem 'turbolinks', '~> 5.2'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
-# ActiveModel Validation for email
-gem 'valid_email', '~> 0.1.2'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -35,13 +33,19 @@ gem 'valid_email', '~> 0.1.2'
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
+  # console
+  gem 'awesome_print', '~> 1.8'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', '~> 10.0', '>= 10.0.2'
+  gem 'byebug', '~> 11.0', '>= 11.0.1'
+  gem 'pry-byebug', '~> 3.7'
+  gem 'pry-rails', '~> 0.3.9'
   # 
   gem 'shoulda-matchers', '~> 4.0', '>= 4.0.1'
   gem 'rspec-rails', '~> 3.8', '>= 3.8.2'
-  gem 'factory_bot', '~> 5.0', '>= 5.0.2'
+  gem 'factory_bot_rails', '~> 5.0', '>= 5.0.1'
   gem 'capybara', '~> 3.15'
+  #
+  gem 'faker', '~> 1.9', '>= 1.9.3'
 
   # configuration of local environment variables
   gem 'dotenv-rails', '~> 2.7', '>= 2.7.2'
