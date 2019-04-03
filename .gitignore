@@ -54,3 +54,4 @@ bower.json
 node_modules/
 
 /.vscode
+.rubocop.yml
