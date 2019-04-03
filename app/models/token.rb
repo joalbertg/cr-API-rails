@@ -13,7 +13,11 @@ class Token < ActiveRecord::Base
   private
 
   def generate_token
-    self.token = SecureRandom.hex while Token.where(token: token).any?
+    loop do
+      self.token = SecureRandom.hex
+      break if Token.where(token: token).empty?
+    end
+
     self.expires_at ||= 1.month.from_now
   end
 end
