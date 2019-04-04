@@ -4,11 +4,13 @@ class ApplicationController < ActionController::Base
   # protect_from_forgery with: :exception
   protect_from_forgery with: :null_session
 
-  before_action :authenticate
+  # before_action :authenticate
+
+  protected
 
   def authenticate
     token_str = params[:token]
-    token = Token.find_by(token: token_str)
+    token = Token.find_by(token: token_str) unless token_str.nil?
 
     if token.nil? || !token.active?
       render json: { error: 'Invalid Token', status: :unauthorized }
