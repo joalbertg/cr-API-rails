@@ -3,19 +3,26 @@
 require 'rails_helper'
 # =
 RSpec.describe Token, type: :model do
+  let(:user1) { create(:user) }
+  let(:valid_attributes) { attributes_for(:token).merge(user: user1) }
+
   context 'associations' do
     it { should belong_to(:user) }
   end
 
   context 'expiration' do
     it 'valid when has not expired' do
-      token = FactoryBot.create(:token, expires_at: DateTime.now + 2.minute)
-      expect(token.active?).to eq(true)
+      valid_attributes[:expires_at] = (DateTime.now + 2.minute)
+      token = TokenService.new(valid_attributes)
+      token.create_object
+      expect(token.object.active?).to eq(true)
     end
 
     it 'invalid when has expired' do
-      token = FactoryBot.create(:token, expires_at: DateTime.now - 5.day)
-      expect(token.active?).to eq(false)
+      valid_attributes[:expires_at] = (DateTime.now - 5.day)
+      token = TokenService.new(valid_attributes)
+      token.create_object
+      expect(token.object.active?).to eq(false)
     end
   end
 end
