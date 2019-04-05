@@ -16,7 +16,7 @@ RSpec.describe User, type: :model do
       expect do
         User.from_omniauth(uid: '12345',
                            provider: 'facebook',
-                           info: { email: 'liss@abc-codigo.com',
+                           info: { email: 'liss@abcd-codigo.com',
                                    name: 'Liss' })
       end.to change(User, :count).by(1)
     end
