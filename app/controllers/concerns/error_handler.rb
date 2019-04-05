@@ -4,7 +4,17 @@
 module ErrorHandler
   extend ActiveSupport::Concern
 
-  def param_missing?(key)
-    render json: { error: "#{key} param is missing" } unless params[key]
+  MSG = { param: 'param is missing',
+          token: 'Invalid token' }.freeze
+
+  def error_message(type, *value)
+    # value = param_name || status
+
+    message = MSG[type.to_sym]
+    message = "#{value.first} " + message if type.eql?('param')
+    message = { error: message }
+    message[:status] = value.first if type.eql?('token')
+
+    render json: message
   end
 end

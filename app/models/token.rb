@@ -4,20 +4,17 @@
 class Token < ActiveRecord::Base
   # -- Relationships --------------------------------------------------------
   belongs_to :user
-  before_create :generate_token
 
   def active?
     expires_at > DateTime.now
   end
 
-  private
+  class << self
+    attr_reader :token_data
 
-  def generate_token
-    loop do
-      self.token = SecureRandom.hex
-      break if Token.where(token: token).empty?
+    def find_token(token_str)
+      @token_data = Token.find_by(token: token_str) unless token_str.nil?
+      @token_data if !@token_data.nil? && @token_data.active?
     end
-
-    self.expires_at ||= 1.month.from_now
   end
 end
