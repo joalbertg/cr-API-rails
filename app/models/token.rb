@@ -14,7 +14,6 @@ class Token < ActiveRecord::Base
 
     def token?(token_str)
       @token_data = Token.find_by(token: token_str) if token_str
-
       token_data.try(:active?) ? true : false
     end
 

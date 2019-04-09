@@ -65,7 +65,7 @@ group :development do
   gem 'brakeman', '~> 4.5', require: false
   gem 'pronto', '~> 0.10.0'
   gem 'rails_best_practices', '~> 1.19.1', require: false
-  #gem 'rubocop', '~> 0.65.0', require: false
+  # gem 'rubocop', '~> 0.65.0', require: false
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
 end

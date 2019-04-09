@@ -18,7 +18,6 @@ class User < ActiveRecord::Base
   # -- Callbacks ------------------------------------------------------------
 
   # -- Class Methods --------------------------------------------------------
-
   def self.from_omniauth(data)
     # receive hash
     # { provider: 'facebook', uid: '12345',
