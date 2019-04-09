@@ -2,30 +2,20 @@
 
 module Api
   module V1
-    # users
+    # users controller
     class UsersController < ApiV1Controller
       # POST /users
+      attr_reader :user
+
       def create
         # params = { auth: { provider: , uid: } }
-        return error_message('param', :auth) if params[:auth]
+        return error_message('param', :auth) unless params[:auth]
 
         @user = User.from_omniauth(params.fetch(:auth))
-        @token = @user.tokens.create
-
-        render 'api/v1/users/show'
-      end
-
-      def show
-        # params = { auth: { provider: , uid: } }
-        return error_message('param', :auth) if params[:auth].nil?
-
-        @user = User.from_omniauth(params.fetch(:auth))
-        @token = @user.tokens.create
+        @token = TokenService.new(user: user).object
 
         render 'api/v1/users/show'
       end
     end
-
-    
   end
 end

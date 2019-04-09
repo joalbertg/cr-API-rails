@@ -13,16 +13,16 @@ RSpec.describe Token, type: :model do
   context 'expiration' do
     it 'valid when has not expired' do
       valid_attributes[:expires_at] = (DateTime.now + 2.minute)
-      token = TokenService.new(valid_attributes)
-      token.create_object
-      expect(token.object.active?).to eq(true)
+      token = TokenService.new(valid_attributes).object
+
+      expect(token.active?).to eq(true)
     end
 
     it 'invalid when has expired' do
       valid_attributes[:expires_at] = (DateTime.now - 5.day)
-      token = TokenService.new(valid_attributes)
-      token.create_object
-      expect(token.object.active?).to eq(false)
+      token = TokenService.new(valid_attributes).object
+
+      expect(token.active?).to eq(false)
     end
   end
 end
