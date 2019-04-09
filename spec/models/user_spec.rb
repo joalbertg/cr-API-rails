@@ -9,6 +9,8 @@ RSpec.describe User, type: :model do
     it { attributes.each { |attr| should validate_presence_of(attr) } }
     it { should_not allow_value('liss@co-digo').for(:email) }
     it { should allow_value('liss@ab-codigo.com').for(:email) }
+    it { should have_many(:tokens) }
+    it { should have_many(:my_polls) }
   end
 
   context 'user_provider_uid' do

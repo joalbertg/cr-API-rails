@@ -7,25 +7,30 @@ module ErrorHandler
   MSG = { param: 'Missing param',
           token: 'Invalid token' }.freeze
 
+  # responsible for storing the arguments
+  Data = Struct.new(:type, :value_1)
+  attr_reader :data
+
   def error_message(type, *value)
+    @data = Data.new(type, value.first)
     # value = param_name || status
-    render json: message(type, value), status: 401
+    render json: message # , status: 401 # fix status
   end
 
   private
 
-  def message(type, value)
-    @message = MSG[type.to_sym] + param_msg(type, value)
+  def message
+    @message = MSG[data.type.to_sym] + param_msg
     @message = { error: @message }
-    status_msg(type, value)
+    status_msg
     @message
   end
 
-  def param_msg(type, value)
-    type.eql?('param') ? " :#{value.first}" : ''
+  def param_msg
+    data.type.eql?('param') ? " :#{data.value_1}" : ''
   end
 
-  def status_msg(type, value)
-    @message[:status] = value.first if type.eql?('token')
+  def status_msg
+    @message[:status] = data.value_1 if data.type.eql?('token')
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# service
+# service to create token
 class TokenService
   def initialize(params)
     @token = Token.new(params)

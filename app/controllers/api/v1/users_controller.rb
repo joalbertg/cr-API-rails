@@ -16,6 +16,16 @@ module Api
 
         render 'api/v1/users/show'
       end
+
+      def show
+        # params = { auth: { provider: , uid: } }
+        return error_message('param', :auth) unless params[:auth]
+
+        @user = User.from_omniauth(params.fetch(:auth))
+        @token = TokenService.new(user: user).object
+
+        render 'api/v1/users/show'
+      end
     end
   end
 end

@@ -56,3 +56,6 @@ node_modules/
 /.vscode
 .rubocop.yml
 *.DS_Store
+.pronto.yml
+.fasterer.yml
+.reek.yml

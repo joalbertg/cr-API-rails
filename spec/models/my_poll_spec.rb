@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe MyPoll, type: :model do
   context 'validations' do
-    let(:attributes) { %i[title description expires_at] }
+    let(:attributes) { %i[title description expires_at user] }
 
     it { should belong_to(:user) }
     it { attributes.each { |attr| should validate_presence_of(attr) } }

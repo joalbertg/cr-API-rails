@@ -4,6 +4,7 @@
 class User < ActiveRecord::Base
   # -- Relationships --------------------------------------------------------
   has_many :tokens
+  has_many :my_polls
 
   # -- Validations ----------------------------------------------------------
   validates :uid, presence: true

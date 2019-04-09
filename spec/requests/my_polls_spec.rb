@@ -23,6 +23,8 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
     end
 
     it { have_http_status(200) }
+    it { expect(response).to have_http_status(200) }
+
     it 'send the requested poll' do
       json = JSON.parse(response.body)
       expect(json['id']).to eq(@poll.id)
@@ -34,6 +36,36 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
 
       expect(json.keys).to contain_exactly('id', 'title', 'description', 'expires_at', 'user_id')
       expect(json.keys.map(&:to_sym)).to match_array(attributes.keys)
+    end
+  end
+
+  describe 'POST /polls' do
+    context 'valid token' do
+      before :each do
+        @poll = FactoryBot.build(:my_poll)
+        @token = TokenService.new(user: FactoryBot.create(:user)).object
+        # request
+        post '/api/v1/polls', token: @token.token, poll: @poll.as_json
+      end
+
+      it { expect(response).to have_http_status(200) }
+
+      it 'new poll' do
+        expect do
+          post '/api/v1/polls', token: @token.token, poll: @poll.as_json
+        end.to change(MyPoll, :count).by(1)
+      end
+
+      it 'respond with the poll created' do
+        json = JSON.parse(response.body)
+        expect(json['title']).to eq('Hello MyPoll')
+      end
+    end
+
+    context 'invalid token' do
+      before :each do
+        post '/api/v1/polls'
+      end
     end
   end
 end
