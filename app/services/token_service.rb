@@ -7,17 +7,16 @@ class TokenService
   end
 
   def create_object
-    return true if generate_token && @token.save
-
-    false
-  end
-
-  def object
-    @token
+    generate_token && @token.save ? true : false
   end
 
   def errors
     @token.errors
+  end
+
+  def object
+    create_object
+    @token
   end
 
   private

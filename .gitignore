@@ -55,3 +55,4 @@ node_modules/
 
 /.vscode
 .rubocop.yml
+*.DS_Store

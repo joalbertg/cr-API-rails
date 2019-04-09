@@ -9,7 +9,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
       post '/api/v1/users', auth: auth
     end
 
-    it { have_http_status(200) }
+    it { expect(response).to have_http_status(200) }
 
     it { change(User, :count).by(1) }
 

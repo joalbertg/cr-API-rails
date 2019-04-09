@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# user
+# users model
 class User < ActiveRecord::Base
   # -- Relationships --------------------------------------------------------
   has_many :tokens
@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   # -- Callbacks ------------------------------------------------------------
 
   # -- Class Methods --------------------------------------------------------
+
   def self.from_omniauth(data)
     # receive hash
     # { provider: 'facebook', uid: '12345',
@@ -25,8 +26,9 @@ class User < ActiveRecord::Base
 
     where(provider: data.fetch(:provider),
           uid: data.fetch(:uid)).first_or_create do |user|
-            if data.fetch(:info)
-              user.email = data.fetch(:info).fetch(:email)
+            info = data.fetch(:info)
+            if info
+              user.email = info.fetch(:email)
               # user.name = data.fetch(:info).fetch(:name)
             end
           end
