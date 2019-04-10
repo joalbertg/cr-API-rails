@@ -21,16 +21,22 @@ module ErrorHandler
 
   def message
     @message = MSG[data.type.to_sym] + param_msg
-    @message = { error: @message }
+    @message = { errors: @message }
     status_msg
     @message
   end
 
   def param_msg
-    data.type.eql?('param') ? " :#{data.value_1}" : ''
+    return '' unless data.type.eql?('param')
+
+    response.status = :unprocessable_entity
+    " :#{data.value_1}"
   end
 
   def status_msg
-    @message[:status] = data.value_1 if data.type.eql?('token')
+    return '' unless data.type.eql?('token')
+
+    response.status = :unauthorized
+    @message[:status] = data.value_1
   end
 end

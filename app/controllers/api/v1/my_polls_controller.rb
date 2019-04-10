@@ -20,7 +20,7 @@ module Api
         # poll.user = @curren_user
         return render 'api/v1/my_polls/show' if @poll.save
 
-        render json: { errors: @poll.errors.full_messages }, status: :unprocesable_entity
+        render json: { errors: @poll.errors.full_messages }, status: :unprocessable_entity
       end
 
       def update; end

@@ -66,6 +66,28 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
       before :each do
         post '/api/v1/polls'
       end
+
+      it { expect(response).to have_http_status(401) }
+
+      it 'respond with the errors' do
+        json = JSON.parse(response.body)
+        expect(json.fetch('errors')).to_not be_empty
+      end
+    end
+
+    context 'invalid params' do
+      before :each do
+        @poll = FactoryBot.build(:my_poll).attributes.except('title')
+        @token = TokenService.new(user: FactoryBot.create(:user)).object
+
+        post '/api/v1/polls', token: @token.token, poll: @poll.as_json
+      end
+      it { expect(response).to have_http_status(422) }
+
+      it 'respond with the errors when saving the poll' do
+        json = JSON.parse(response.body)
+        expect(json.fetch('errors')).to_not be_empty
+      end
     end
   end
 end
