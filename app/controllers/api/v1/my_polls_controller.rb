@@ -5,14 +5,13 @@ module Api
     # poll controller
     class MyPollsController < ApiV1Controller
       before_action :authenticate, only: %i[create update destroy]
+      before_action :set_poll, only: %i[show update]
 
       def index
         @polls = MyPoll.all
       end
 
-      def show
-        @poll = MyPoll.find_by_id(params[:id])
-      end
+      def show; end
 
       def create
         @poll = @current_user.my_polls.new(my_polls_params)
@@ -28,6 +27,10 @@ module Api
       def destroy; end
 
       private
+
+      def set_poll
+        @poll = MyPoll.find_by_id(params[:id])
+      end
 
       def my_polls_params
         params.require(:poll).permit(:title, :description, :expires_at)

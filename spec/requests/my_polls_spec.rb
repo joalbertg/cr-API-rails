@@ -79,7 +79,6 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
       before :each do
         @poll = FactoryBot.build(:my_poll).attributes.except('title')
         @token = TokenService.new(user: FactoryBot.create(:user)).object
-
         post '/api/v1/polls', token: @token.token, poll: @poll.as_json
       end
       it { expect(response).to have_http_status(422) }
@@ -88,6 +87,26 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
         json = JSON.parse(response.body)
         expect(json.fetch('errors')).to_not be_empty
       end
+    end
+  end
+
+  describe 'PATCH /polls/:id' do
+    context 'valid token' do
+      before :each do
+        @token = TokenService.new(user: FactoryBot.create(:user)).object
+        @poll = FactoryBot.create(:my_poll, user: @token.user)
+        # post '/api/v1/polls/:id'
+      end
+    end
+
+    context 'invalid token' do
+      before :each do
+        @token = TokenService.new(user: FactoryBot.create(:user)).object
+        @poll = FactoryBot.create(:my_poll, user: FactoryBot.create(:user))
+        # post '/api/v1/polls/:id'
+      end
+
+      it { have_http_status(200) }
     end
   end
 end
