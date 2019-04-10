@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::V1::UsersController, type: :request do
   describe 'POST /users' do
     before :each do
-      auth = { provider: 'facebook', uid: '123jkfsvjk6', info: { email: 'joa@abce-code.com' } }
+      auth = { provider: 'facebook', uid: '123jkfsvjk6', info: { email: 'joa@xy-code.com' } }
       post '/api/v1/users', auth: auth
     end
 
@@ -15,7 +15,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
 
     it 'respond with the user found or created' do
       json = JSON.parse(response.body)
-      expect(json['email']).to eq('joa@abce-code.com')
+      expect(json['email']).to eq('joa@xy-code.com')
     end
   end
 end

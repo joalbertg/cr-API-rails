@@ -19,10 +19,15 @@ module Api
         # poll.user = @curren_user
         return render 'api/v1/my_polls/show' if @poll.save
 
-        render json: { errors: @poll.errors.full_messages }, status: :unprocessable_entity
+        error_message('error', @poll, :unprocessable_entity)
       end
 
-      def update; end
+      def update
+        return error_message('user', :unauthorized) unless @current_user == @poll.user
+
+        @poll.update(my_polls_params)
+        render 'api/v1/my_polls/show'
+      end
 
       def destroy; end
 

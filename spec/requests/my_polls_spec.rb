@@ -42,9 +42,8 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
   describe 'POST /polls' do
     context 'valid token' do
       before :each do
-        @poll = FactoryBot.build(:my_poll)
         @token = TokenService.new(user: FactoryBot.create(:user)).object
-        # request
+        @poll = FactoryBot.build(:my_poll)
         post '/api/v1/polls', token: @token.token, poll: @poll.as_json
       end
 
@@ -64,7 +63,8 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
 
     context 'invalid token' do
       before :each do
-        post '/api/v1/polls'
+        # post '/api/v1/polls'
+        post api_v1_polls_path
       end
 
       it { expect(response).to have_http_status(401) }
@@ -95,18 +95,33 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
       before :each do
         @token = TokenService.new(user: FactoryBot.create(:user)).object
         @poll = FactoryBot.create(:my_poll, user: @token.user)
-        # post '/api/v1/polls/:id'
+        @poll.title = 'Nuevo título'
+        # patch '/api/v1/polls/:id'
+        patch api_v1_poll_path(@poll), token: @token.token, poll: @poll.as_json
+      end
+      it { expect(response).to have_http_status(200) }
+
+      it 'update the indicated poll' do
+        json = JSON.parse(response.body)
+        expect(json.fetch('title')).to eq('Nuevo título')
       end
     end
 
     context 'invalid token' do
       before :each do
-        @token = TokenService.new(user: FactoryBot.create(:user)).object
         @poll = FactoryBot.create(:my_poll, user: FactoryBot.create(:user))
-        # post '/api/v1/polls/:id'
+        @token = TokenService.new(user: FactoryBot.create(:user)).object
+        @poll.title = 'Nuevo título'
+        # patch '/api/v1/polls/:id'
+        patch api_v1_poll_path(@poll), token: @token.token, poll: @poll.as_json
       end
 
-      it { have_http_status(200) }
+      it { expect(response).to have_http_status(401) }
+
+      it 'non update the indicated poll' do
+        json = JSON.parse(response.body)
+        expect(json.fetch('errors')).to_not be_empty
+      end
     end
   end
 end

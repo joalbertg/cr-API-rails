@@ -4,39 +4,48 @@
 module ErrorHandler
   extend ActiveSupport::Concern
 
-  MSG = { param: 'Missing param',
-          token: 'Invalid token' }.freeze
+  MSG = { error: '',
+          param: 'Missing param',
+          token: 'Invalid token',
+          user: 'Unauthorized user to modify this poll' }.freeze
 
-  # responsible for storing the arguments
-  Data = Struct.new(:type, :value_1)
-  attr_reader :data
+  attr_reader :type, :value
+  # value = param_name || status
 
   def error_message(type, *value)
-    @data = Data.new(type, value.first)
-    # value = param_name || status
-    render json: message # , status: 401 # fix status
+    @type = type
+    @value = value
+
+    render json: message
   end
 
   private
 
   def message
-    @message = MSG[data.type.to_sym] + param_msg
+    @message = MSG[type.to_sym] + param_msg
     @message = { errors: @message }
+    error_msg
     status_msg
     @message
   end
 
-  def param_msg
-    return '' unless data.type.eql?('param')
+  def error_msg
+    return '' unless type.eql?('error')
 
-    response.status = :unprocessable_entity
-    " :#{data.value_1}"
+    response.status = value.second
+    @message[:errors] = value.first.errors.full_messages
+  end
+
+  def param_msg
+    return '' unless type.eql?('param')
+
+    response.status = value.second
+    " :#{value.first}"
   end
 
   def status_msg
-    return '' unless data.type.eql?('token')
+    return '' unless type.eql?('token') || type.eql?('user')
 
-    response.status = :unauthorized
-    @message[:status] = data.value_1
+    response.status = value.first
   end
 end
