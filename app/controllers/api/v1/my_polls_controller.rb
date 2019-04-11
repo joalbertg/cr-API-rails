@@ -23,22 +23,29 @@ module Api
       end
 
       def update
-        return error_message('user', :unauthorized) unless @current_user == @poll.user
-
-        @poll.update(my_polls_params)
-        render 'api/v1/my_polls/show'
+        # return error_message('user', :unauthorized) unless @current_user == @poll.user
+        update_poll unless authenticate_owner('user')
       end
 
       def destroy
-        # binding.pry
-        return error_message('destroy', :unauthorized) unless @current_user == @poll.user
-
-        # binding.pry
-        @poll.destroy
-        render json: { message: 'the indicated poll was eliminated' }
+        destroy_poll unless authenticate_owner('destroy')
       end
 
       private
+
+      def authenticate_owner(type)
+        @poll.user != @current_user ? error_message(type, :unauthorized) : false
+      end
+
+      def update_poll
+        @poll.update(my_polls_params)
+        render('api/v1/my_polls/show')
+      end
+
+      def destroy_poll
+        @poll.destroy
+        render json: { message: 'the indicated poll was eliminated' }
+      end
 
       def set_poll
         @poll = MyPoll.find_by_id(params[:id])
