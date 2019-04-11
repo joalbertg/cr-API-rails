@@ -5,7 +5,7 @@ module Api
     # poll controller
     class MyPollsController < ApiV1Controller
       before_action :authenticate, only: %i[create update destroy]
-      before_action :set_poll, only: %i[show update]
+      before_action :set_poll, only: %i[show update destroy]
 
       def index
         @polls = MyPoll.all
@@ -19,7 +19,7 @@ module Api
         # poll.user = @curren_user
         return render 'api/v1/my_polls/show' if @poll.save
 
-        error_message('error', @poll, :unprocessable_entity)
+        error_message('error', :unprocessable_entity, @poll)
       end
 
       def update
@@ -29,7 +29,14 @@ module Api
         render 'api/v1/my_polls/show'
       end
 
-      def destroy; end
+      def destroy
+        # binding.pry
+        return error_message('destroy', :unauthorized) unless @current_user == @poll.user
+
+        # binding.pry
+        @poll.destroy
+        render json: { message: 'the indicated poll was eliminated' }
+      end
 
       private
 

@@ -11,7 +11,10 @@ class Token < ActiveRecord::Base
 
   class << self
     def token?(token_str)
-      valid_token?(token_str) if token_str
+      return false unless token_str
+
+      @token_data = Token.find_by(token: token_str)
+      token_data.try(:active?) ? true : false
     end
 
     def user
@@ -21,10 +24,5 @@ class Token < ActiveRecord::Base
     private
 
     attr_reader :token_data
-
-    def valid_token?(token_str)
-      @token_data = Token.find_by(token: token_str)
-      token_data.try(:active?) ? true : false
-    end
   end
 end

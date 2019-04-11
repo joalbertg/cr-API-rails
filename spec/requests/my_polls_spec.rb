@@ -81,6 +81,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
         @token = TokenService.new(user: FactoryBot.create(:user)).object
         post '/api/v1/polls', token: @token.token, poll: @poll.as_json
       end
+
       it { expect(response).to have_http_status(422) }
 
       it 'respond with the errors when saving the poll' do
@@ -99,6 +100,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
         # patch '/api/v1/polls/:id'
         patch api_v1_poll_path(@poll), token: @token.token, poll: @poll.as_json
       end
+
       it { expect(response).to have_http_status(200) }
 
       it 'update the indicated poll' do
@@ -119,6 +121,43 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
       it { expect(response).to have_http_status(401) }
 
       it 'non update the indicated poll' do
+        json = JSON.parse(response.body)
+        expect(json.fetch('errors')).to_not be_empty
+      end
+    end
+  end
+
+  describe 'DELETE /polls/:id' do
+    context 'valid token' do
+      before :each do
+        @token = TokenService.new(user: FactoryBot.create(:user)).object
+        @poll = FactoryBot.create(:my_poll, user: @token.user)
+        # delete '/api/v1/polls/:id'
+      end
+
+      it 'ok' do
+        delete api_v1_poll_path(@poll), token: @token.token
+        expect(response).to have_http_status(200)
+      end
+
+      it 'delete the indicated poll' do
+        expect do
+          delete api_v1_poll_path(@poll), token: @token.token
+        end.to change(MyPoll, :count).by(-1)
+      end
+    end
+
+    context 'invalid token' do
+      before :each do
+        @poll = FactoryBot.create(:my_poll, user: FactoryBot.create(:user))
+        @token = TokenService.new(user: FactoryBot.create(:user)).object
+        # delete '/api/v1/polls/:id'
+        delete api_v1_poll_path(@poll), token: @token.token
+      end
+
+      it { expect(response).to have_http_status(401) }
+
+      it 'non delete the indicated poll' do
         json = JSON.parse(response.body)
         expect(json.fetch('errors')).to_not be_empty
       end

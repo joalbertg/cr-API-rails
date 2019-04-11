@@ -5,6 +5,7 @@ module ErrorHandler
   extend ActiveSupport::Concern
 
   MSG = { error: '',
+          destroy: 'You are not authorized to delete this poll',
           param: 'Missing param',
           token: 'Invalid token',
           user: 'Unauthorized user to modify this poll' }.freeze
@@ -32,8 +33,8 @@ module ErrorHandler
   def error_msg
     return '' unless type.eql?('error')
 
-    response.status = value.second
-    @message[:errors] = value.first.errors.full_messages
+    response.status = value.first
+    @message[:errors] = value.second.errors.full_messages
   end
 
   def param_msg
@@ -44,7 +45,7 @@ module ErrorHandler
   end
 
   def status_msg
-    return '' unless type.eql?('token') || type.eql?('user')
+    return '' unless type.eql?('token') || type.eql?('user') || type.eql?('destroy')
 
     response.status = value.first
   end
