@@ -28,4 +28,8 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
       expect(question.keys).to contain_exactly('id', 'description')
     end
   end
+
+  describe 'POST /polls/:poll_id/questions' do
+
+  end
 end
