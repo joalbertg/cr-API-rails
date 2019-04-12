@@ -35,20 +35,19 @@ module Api
         set_poll
       end
 
-    end
+      private
 
-    private
+      def set_poll
+        @poll = MyPoll.find_by_id(params[:poll_id])
+      end
 
-    def set_poll
-      @poll = MyPoll.find_by_id(params[:poll_id])
-    end
+      def question_params
+        params.require(:question).permit(:description)
+      end
 
-    def question_params
-      params.require(:question).permit(:description)
-    end
-
-    def set_question
-      @question = Question.find_by_id(params[:id])
+      def set_question
+        @question = Question.find_by_id(params[:id])
+      end
     end
   end
 end
