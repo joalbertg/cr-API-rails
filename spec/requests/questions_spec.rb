@@ -30,6 +30,45 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
   end
 
   describe 'POST /polls/:poll_id/questions' do
+    context 'valid user' do
+      before :each do
+        @token = TokenService.new(user: FactoryBot.create(:user)).object
+        @poll = FactoryBot.create(:my_poll, user: @token.user)
+        @question = FactoryBot.build(:question)
 
+        post api_v1_poll_questions_path(@poll),
+             question: @question.as_json,
+             token: @token.token
+      end
+
+      it { expect(response).to have_http_status(200) }
+
+      it 'new question' do
+        expect do
+          post api_v1_poll_questions_path(@poll),
+               question: FactoryBot.build(:question).attributes, # .as_json
+               token: @token.token
+        end.to change(Question, :count).by(1)
+      end
+
+      it 'respond with the question created' do
+        json = JSON.parse(response.body)
+        expect(json['description']).to eq(@question.description)
+      end
+    end
+
+    context 'invalid user' do
+      before :each do
+        # post '/api/v1/polls'
+        post api_v1_polls_path
+      end
+
+      it { expect(response).to have_http_status(401) }
+
+      it 'respond with the errors' do
+        json = JSON.parse(response.body)
+        expect(json.fetch('errors')).to_not be_empty
+      end
+    end
   end
 end
