@@ -9,6 +9,7 @@ module Api
 
       # GET /polls/:poll_id/questions
       def index
+        @poll = MyPoll.find_by_id(params[:poll_id])
         @questions = @poll.questions
       end
 
@@ -32,7 +33,6 @@ module Api
     end
 
     def set_question
-      @poll = MyPoll.find_by_id(params[:poll_id])
       @question = Question.find_by_id(params[:id])
     end
   end
