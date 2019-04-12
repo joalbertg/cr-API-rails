@@ -9,7 +9,7 @@ module Api
 
       # GET /polls/:poll_id/questions
       def index
-        @poll = MyPoll.find_by_id(params[:poll_id])
+        set_poll
         @questions = @poll.questions
       end
 
@@ -17,16 +17,31 @@ module Api
       def show; end
 
       # POST /polls/1/questions
-      def create; end
+      def create
+        set_poll
+        @question = @poll.questions.new(question_params)
+        return render 'api/v1/questions/show' if @question.save
+
+        error_message('error', :unprocessable_entity, @question)
+      end
 
       # PATCH/PUT /polls/1/questions/1
-      def update; end
+      def update
+        set_poll
+      end
 
       # DELETE /polls/1/questions/1
-      def destroy; end
+      def destroy
+        set_poll
+      end
+
     end
 
     private
+
+    def set_poll
+      @poll = MyPoll.find_by_id(params[:poll_id])
+    end
 
     def question_params
       params.require(:question).permit(:description)
