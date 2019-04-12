@@ -7,6 +7,7 @@ RSpec.describe MyPoll, type: :model do
     let(:attributes) { %i[title description expires_at user] }
 
     it { should belong_to(:user) }
+    it { should have_many(:questions) }
     it { attributes.each { |attr| should validate_presence_of(attr) } }
     it { should_not allow_value('a').for(:title) }
     it { should validate_length_of(:title).is_at_least(10) }
