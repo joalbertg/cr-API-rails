@@ -30,12 +30,16 @@ module Api
       def update
         set_question
         set_poll
+
+        update_question unless authenticate_owner('user')
       end
 
       # DELETE /polls/1/questions/1
       def destroy
         set_question
         set_poll
+
+        destroy_question unless authenticate_owner('destroy')
       end
 
       private
@@ -59,6 +63,18 @@ module Api
       def create_question
         @question = @poll.questions.new(question_params)
         return render 'api/v1/questions/show' if @question.save
+
+        error_message('error', :unprocessable_entity, @question)
+      end
+
+      def update_question
+        return render('api/v1/questions/show') if @question.update(question_params)
+
+        error_message('error', :unprocessable_entity, @question)
+      end
+
+      def destroy_question
+        return render json: { message: 'the indicated question was eliminated' } if @question.destroy
 
         error_message('error', :unprocessable_entity, @question)
       end

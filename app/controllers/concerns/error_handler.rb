@@ -5,10 +5,10 @@ module ErrorHandler
   extend ActiveSupport::Concern
 
   MSG = { error: '',
-          destroy: 'You are not authorized to delete this poll',
+          destroy: 'You are not authorized to delete this record',
           param: 'Missing param',
           token: 'Invalid token',
-          user: 'Unauthorized user to modify this poll' }.freeze
+          user: 'Unauthorized user to modify this record' }.freeze
 
   attr_reader :type, :value
   # value = param_name || status
