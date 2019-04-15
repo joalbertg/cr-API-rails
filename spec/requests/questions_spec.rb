@@ -57,7 +57,7 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
       end
     end
 
-    context 'invalid user' do
+    context 'missing params' do
       before :each do
         # post '/api/v1/polls'
         post api_v1_polls_path
@@ -66,6 +66,25 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
       it { expect(response).to have_http_status(401) }
 
       it 'respond with the errors' do
+        json = JSON.parse(response.body)
+        expect(json.fetch('errors')).to_not be_empty
+      end
+    end
+
+    context 'invalid user' do
+      before :each do
+        @token = TokenService.new(user: FactoryBot.create(:user)).object
+        @poll = FactoryBot.create(:my_poll, user: FactoryBot.create(:user))
+        @question = FactoryBot.build(:question)
+
+        post api_v1_poll_questions_path(@poll),
+             question: @question.as_json,
+             token: @token.token
+      end
+
+      it { expect(response).to have_http_status(401) }
+
+      it 'respond with the errors when saving the question' do
         json = JSON.parse(response.body)
         expect(json.fetch('errors')).to_not be_empty
       end
