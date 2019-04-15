@@ -90,4 +90,38 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
       end
     end
   end
+
+  describe 'PUT/PATCH /polls/:poll_id/questions/:id' do
+    before :each do
+      @question = @poll.questions[0]
+      @question.description = 'Hola Mundo'
+      patch api_v1_poll_question_path(@poll, @question), question: @question.as_json, token: @token.token
+    end
+
+    it { expect(response).to have_http_status(200) }
+
+    it 'update the indicated data' do
+      json = JSON.parse(response.body)
+      expect(json['description']).to eq(@question.description)
+    end
+  end
+
+  describe 'DELETE /polls/:poll_id/questions/:id' do
+    before :each do
+      @question = @poll.questions[0]
+    end
+
+    it 'eliminate the question' do
+      delete api_v1_poll_question_path(@poll, @question), token: @token.token
+
+      expect(response).to have_http_status(200)
+      expect(Question.where(id: @question.id)). to be_empty
+    end
+
+    it 'reduces the count of questions in -1' do
+      expect do
+        delete api_v1_poll_question_path(@poll, @question), token: @token.token
+      end.to change(Question, :count).by(-1)
+    end
+  end
 end
