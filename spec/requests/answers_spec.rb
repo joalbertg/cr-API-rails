@@ -53,7 +53,7 @@ RSpec.describe Api::V1::AnswersController, type: :request do
   end
 
   # -- update ---------------------------------------------------------------
-  describe 'PUT/PATCH /polls/:poll_id/questions/:id' do
+  describe 'PUT/PATCH /polls/:poll_id/answers/:id' do
     before :each do
       @answer = FactoryBot.create(:answer, question: @question)
       @answer.description = 'New answer'
@@ -70,6 +70,25 @@ RSpec.describe Api::V1::AnswersController, type: :request do
   end
 
   # -- delete ---------------------------------------------------------------
-  describe 'DELETE /polls/:poll_id/questions/:id' do
+  describe 'DELETE /polls/:poll_id/answers/:id' do
+    before :each do
+      @answer = FactoryBot.create(:answer, question: @question)
+    end
+
+    it 'ok' do
+      delete api_v1_poll_answer_path(@poll, @answer), token: @token.token
+      expect(response).to have_http_status(200)
+    end
+
+    it 'eliminate the answer' do
+      delete api_v1_poll_answer_path(@poll, @answer), token: @token.token
+      expect(Answer.where(id: @answer.id)).to be_empty
+    end
+
+    it 'reduces the count of answers in -1' do
+      expect do
+        delete api_v1_poll_answer_path(@poll, @answer), token: @token.token
+      end.to change(Answer, :count).by(-1)
+    end
   end
 end
