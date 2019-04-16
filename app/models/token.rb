@@ -10,16 +10,19 @@ class Token < ActiveRecord::Base
   end
 
   class << self
-    attr_reader :token_data
-
     def token?(token_str)
-      @token_data = Token.find_by(token: token_str) if token_str
+      return false unless token_str
 
+      @token_data = Token.find_by(token: token_str)
       token_data.try(:active?) ? true : false
     end
 
     def user
       token_data.user
     end
+
+    private
+
+    attr_reader :token_data
   end
 end
