@@ -3,6 +3,7 @@
 require 'rails_helper'
 # =
 RSpec.describe Api::V1::MyPollsController, type: :request do
+  # -- index ---------------------------------------------------------------
   describe 'GET /polls' do
     before :each do
       FactoryBot.create_list(:my_poll, 10)
@@ -16,6 +17,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
     end
   end
 
+  # -- show ---------------------------------------------------------------
   describe 'GET /polls/:id' do
     before :each do
       @poll = FactoryBot.create(:my_poll)
@@ -39,6 +41,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
     end
   end
 
+  # -- create ---------------------------------------------------------------
   describe 'POST /polls' do
     context 'valid token' do
       before :each do
@@ -91,6 +94,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
     end
   end
 
+  # -- update ---------------------------------------------------------------
   describe 'PATCH /polls/:id' do
     context 'valid token' do
       before :each do
@@ -111,8 +115,8 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
 
     context 'invalid token' do
       before :each do
-        @poll = FactoryBot.create(:my_poll, user: FactoryBot.create(:user))
         @token = TokenService.new(user: FactoryBot.create(:user)).object
+        @poll = FactoryBot.create(:my_poll, user: FactoryBot.create(:user))
         @poll.title = 'Nuevo título'
         # patch '/api/v1/polls/:id'
         patch api_v1_poll_path(@poll), token: @token.token, poll: @poll.as_json
@@ -127,6 +131,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
     end
   end
 
+  # -- delete ---------------------------------------------------------------
   describe 'DELETE /polls/:id' do
     context 'valid token' do
       before :each do
