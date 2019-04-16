@@ -24,8 +24,10 @@ module Api
 
       # DELETE /polls/1/answers/1
       def destroy
+        authenticate
         set_answer
-        destroy_answer unless authenticate_owner('destroy')
+
+        destroy_answer if @current_user
       end
 
       private
@@ -65,6 +67,8 @@ module Api
       end
 
       def destroy_answer
+        return unless authenticate_owner('destroy')
+
         return render json: { message: 'the indicated question was eliminated' } if @answer.destroy
 
         error_message('error', :unprocessable_entity, @answer)
