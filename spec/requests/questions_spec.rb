@@ -8,6 +8,7 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
     @poll = FactoryBot.create(:poll_with_questions, user: @token.user)
   end
 
+  # -- index ---------------------------------------------------------------
   describe 'GET /polls/:poll_id/questions' do
     before :each do
       get "/api/v1/polls/#{@poll.id}/questions"
@@ -29,6 +30,24 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
     end
   end
 
+  # -- show ---------------------------------------------------------------
+  describe 'GET /polls/:poll_id/questions/:id' do
+    before :each do
+      @question = @poll.questions[0]
+      @description = @question.description
+      get api_v1_poll_question_path(@poll, @question)
+    end
+
+    it { expect(response).to have_http_status(200) }
+
+    it 'receive the request in json' do
+      json = JSON.parse(response.body)
+      expect(json['description']).to eq(@description)
+      expect(json['id']).to eq(@question.id)
+    end
+  end
+
+  # -- create ---------------------------------------------------------------
   describe 'POST /polls/:poll_id/questions' do
     context 'valid user' do
       before :each do
@@ -91,6 +110,7 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
     end
   end
 
+  # -- update ---------------------------------------------------------------
   describe 'PUT/PATCH /polls/:poll_id/questions/:id' do
     before :each do
       @question = @poll.questions[0]
@@ -106,6 +126,7 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
     end
   end
 
+  # -- delete ---------------------------------------------------------------
   describe 'DELETE /polls/:poll_id/questions/:id' do
     before :each do
       @question = @poll.questions[0]
