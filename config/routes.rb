@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :users, only: :create
       resources :polls, controller: 'my_polls', except: %i[new edit] do
         resources :questions, except: %i[new edit]
+        resources :answers, only: %i[create update destroy]
       end
     end
   end
