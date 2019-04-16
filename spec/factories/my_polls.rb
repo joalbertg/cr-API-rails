@@ -10,7 +10,7 @@ FactoryBot.define do
     factory :poll_with_questions do
       title { Faker::Lorem.sentence }
       description { Faker::Lorem.sentences }
-      questions { build_list :question, rand(1..5) }
+      questions { build_list :question, 2 }
     end
   end
 end
