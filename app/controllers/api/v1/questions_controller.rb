@@ -7,6 +7,7 @@ module Api
     class QuestionsController < ApiV1Controller
       before_action :authenticate, only: %i[create update destroy]
       # before_action :set_question, only: %i[show update destroy]
+      # before_action :set_poll
 
       # GET /polls/:poll_id/questions
       def index
