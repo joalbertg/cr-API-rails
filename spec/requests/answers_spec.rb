@@ -40,7 +40,6 @@ RSpec.describe Api::V1::AnswersController, type: :request do
 
     context 'missing params' do
       before :each do
-        # post '/api/v1/polls'
         post api_v1_poll_answers_path(@poll)
       end
 
@@ -55,10 +54,22 @@ RSpec.describe Api::V1::AnswersController, type: :request do
 
   # -- update ---------------------------------------------------------------
   describe 'PUT/PATCH /polls/:poll_id/questions/:id' do
+    before :each do
+      @answer = FactoryBot.create(:answer, question: @question)
+      @answer.description = 'New answer'
+      put api_v1_poll_answer_path(@poll, @answer), answer: @answer.as_json, token: @token.token
+    end
+
+    it { expect(response).to have_http_status(200) }
+
+    it 'update the indicated data' do
+      @answer.reload # optional
+      json = JSON.parse(response.body)
+      expect(json['description']).to eq(@answer.description)
+    end
   end
 
   # -- delete ---------------------------------------------------------------
   describe 'DELETE /polls/:poll_id/questions/:id' do
-  
   end
 end
