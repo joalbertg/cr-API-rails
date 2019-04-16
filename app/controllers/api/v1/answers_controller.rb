@@ -8,13 +8,18 @@ module Api
 
       # POST /polls/1/answers
       def create
-        create_answer unless authenticate_owner('user')
+        authenticate
+
+        create_answer if @current_user
+        # create_answer unless authenticate_owner('user')
       end
 
       # PATCH/PUT /polls/1/answers/1
       def update
+        authenticate
         set_answer
-        update_answer unless authenticate_owner('user')
+
+        update_answer if @current_user
       end
 
       # DELETE /polls/1/answers/1
@@ -38,13 +43,13 @@ module Api
       end
 
       def authenticate_owner(type)
-        return unless authenticate
-
         set_poll
-        @poll.user != @current_user ? error_message(type, :unauthorized) : false
+        @poll.user == @current_user ? true : error_message(type, :unauthorized)
       end
 
       def create_answer
+        return unless authenticate_owner('user')
+
         @answer = Answer.new(answer_params)
         return render 'api/v1/answers/show' if @answer.save
 
@@ -52,6 +57,8 @@ module Api
       end
 
       def update_answer
+        return unless authenticate_owner('user')
+
         return render('api/v1/answers/show') if @answer.update(answer_params)
 
         error_message('error', :unprocessable_entity, @answer)
