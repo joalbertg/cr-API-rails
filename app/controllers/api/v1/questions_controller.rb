@@ -5,7 +5,7 @@ module Api
   module V1
     # questions controller
     class QuestionsController < ApiV1Controller
-      before_action :authenticate, only: %i[create update destroy]
+      # before_action :authenticate, only: %i[create update destroy]
       # before_action :set_question, only: %i[show update destroy]
       # before_action :set_poll
 
@@ -22,24 +22,18 @@ module Api
 
       # POST /polls/1/questions
       def create
-        set_poll
-
         create_question unless authenticate_owner('user')
       end
 
       # PATCH/PUT /polls/1/questions/1
       def update
         set_question
-        set_poll
-
         update_question unless authenticate_owner('user')
       end
 
       # DELETE /polls/1/questions/1
       def destroy
         set_question
-        set_poll
-
         destroy_question unless authenticate_owner('destroy')
       end
 
@@ -58,6 +52,9 @@ module Api
       end
 
       def authenticate_owner(type)
+        return unless authenticate
+
+        set_poll
         @poll.user != @current_user ? error_message(type, :unauthorized) : false
       end
 
