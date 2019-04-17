@@ -9,8 +9,12 @@ class ApiV1Controller < ApplicationController
   protected
 
   def authenticate
-    return error_message('token', :unauthorized) unless Token.token?(params[:token])
+    return render error_message('token', :unauthorized) unless Token.token?(params[:token])
 
     @current_user = Token.user
+  end
+
+  def authenticate_owner(owner)
+    render(error_message('record', :unauthorized)) unless owner == @current_user
   end
 end
