@@ -6,5 +6,11 @@ FactoryBot.define do
     expires_at { DateTime.now + 10.minutes }
     title { 'Hello MyPoll' }
     description { Faker::Lorem.sentence(10) }
+
+    factory :poll_with_questions do
+      title { Faker::Lorem.sentence }
+      description { Faker::Lorem.sentences }
+      questions { build_list :question, 2 }
+    end
   end
 end
