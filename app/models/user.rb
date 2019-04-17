@@ -4,12 +4,14 @@
 class User < ActiveRecord::Base
   # -- Relationships --------------------------------------------------------
   has_many :tokens
+  has_many :my_polls
 
   # -- Validations ----------------------------------------------------------
   validates :uid, presence: true
   validates :provider, presence: true
   validates :email,
             presence: true,
+            uniqueness: true,
             format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i,
                       on: :create }
 
@@ -18,7 +20,6 @@ class User < ActiveRecord::Base
   # -- Callbacks ------------------------------------------------------------
 
   # -- Class Methods --------------------------------------------------------
-
   def self.from_omniauth(data)
     # receive hash
     # { provider: 'facebook', uid: '12345',

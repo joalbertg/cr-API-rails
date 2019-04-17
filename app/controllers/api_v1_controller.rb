@@ -4,7 +4,7 @@
 class ApiV1Controller < ApplicationController
   include ErrorHandler
 
-  before_action :authenticate
+  # before_action :authenticate
 
   protected
 
