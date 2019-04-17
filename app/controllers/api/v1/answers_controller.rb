@@ -4,30 +4,33 @@ module Api
   module V1
     # answers controller
     class AnswersController < ApiV1Controller
-      # create update destroy
+      before_action :authenticate, except: %i[index show]
+      before_action :set_answer, only: %i[update destroy]
+      before_action :set_poll
+      before_action(only: %i[update destroy create]) do |controller|
+        controller.authenticate_owner(@poll.user)
+      end
 
       # POST /polls/1/answers
       def create
-        authenticate
+        @answer = Answer.new(answer_params)
+        return render('api/v1/answers/show') if @answer.save
 
-        create_answer if @current_user
-        # create_answer unless authenticate_owner('user')
+        render_message
       end
 
       # PATCH/PUT /polls/1/answers/1
       def update
-        authenticate
-        set_answer
+        return render('api/v1/answers/show') if @answer.update(answer_params)
 
-        update_answer if @current_user
+        render_message
       end
 
       # DELETE /polls/1/answers/1
       def destroy
-        authenticate
-        set_answer
+        return render(error_message('delete', :ok)) if @answer.destroy
 
-        destroy_answer if @current_user
+        render_message
       end
 
       private
@@ -44,34 +47,8 @@ module Api
         @answer = Answer.find_by_id(params[:id])
       end
 
-      def authenticate_owner(type)
-        set_poll
-        @poll.user == @current_user ? true : error_message(type, :unauthorized)
-      end
-
-      def create_answer
-        return unless authenticate_owner('user')
-
-        @answer = Answer.new(answer_params)
-        return render 'api/v1/answers/show' if @answer.save
-
-        error_message('error', :unprocessable_entity, @answer)
-      end
-
-      def update_answer
-        return unless authenticate_owner('user')
-
-        return render('api/v1/answers/show') if @answer.update(answer_params)
-
-        error_message('error', :unprocessable_entity, @answer)
-      end
-
-      def destroy_answer
-        return unless authenticate_owner('destroy')
-
-        return render json: { message: 'the indicated question was eliminated' } if @answer.destroy
-
-        error_message('error', :unprocessable_entity, @answer)
+      def render_message
+        render error_message('error', :unprocessable_entity, @answer)
       end
     end
   end

@@ -5,10 +5,11 @@ module ErrorHandler
   extend ActiveSupport::Concern
 
   MSG = { error: '',
-          destroy: 'You are not authorized to delete this record',
+          # destroy: 'You are not authorized to delete this record',
           param: 'Missing param',
           token: 'Invalid token',
-          user: 'Unauthorized user to modify this record' }.freeze
+          record: 'Unauthorized user to modify this record',
+          delete: 'The indicated record was successfully deleted' }.freeze
 
   attr_reader :type, :value
   # value = param_name || status
@@ -17,13 +18,13 @@ module ErrorHandler
     @type = type
     @value = value
 
-    render json: message
+    { json: message }
   end
 
   private
 
   def message
-    @message = MSG[type.to_sym] + param_msg
+    @message = MSG[type.to_sym] + param_msg.to_s
     @message = { errors: @message }
     error_msg
     status_msg
@@ -45,7 +46,7 @@ module ErrorHandler
   end
 
   def status_msg
-    return '' unless type.eql?('token') || type.eql?('user') || type.eql?('destroy')
+    return '' unless type.eql?('token') || type.eql?('record') || type.eql?('delete')
 
     response.status = value.first
   end
