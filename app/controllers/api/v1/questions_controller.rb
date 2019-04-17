@@ -5,36 +5,41 @@ module Api
   module V1
     # questions controller
     class QuestionsController < ApiV1Controller
-      # before_action :authenticate, only: %i[create update destroy]
-      # before_action :set_question, only: %i[show update destroy]
-      # before_action :set_poll
+      before_action :authenticate, except: %i[index show]
+      before_action :set_question, only: %i[show update destroy]
+      before_action :set_poll
+      before_action(only: %i[update destroy create]) do |controller|
+        controller.authenticate_owner(@poll.user)
+      end
 
       # GET /polls/:poll_id/questions
       def index
-        set_poll
         @questions = @poll.questions
       end
 
       # GET /polls/1/questions/2
-      def show
-        set_question
-      end
+      def show; end
 
       # POST /polls/1/questions
       def create
-        create_question unless authenticate_owner('user')
+        @question = @poll.questions.new(question_params)
+        return render('api/v1/questions/show') if @question.save
+
+        render_message
       end
 
       # PATCH/PUT /polls/1/questions/1
       def update
-        set_question
-        update_question unless authenticate_owner('user')
+        return render('api/v1/questions/show') if @question.update(question_params)
+
+        render_message
       end
 
       # DELETE /polls/1/questions/1
       def destroy
-        set_question
-        destroy_question unless authenticate_owner('destroy')
+        return render(error_message('delete', :ok)) if @question.destroy
+
+        render_message
       end
 
       private
@@ -51,30 +56,8 @@ module Api
         @question = Question.find_by_id(params[:id])
       end
 
-      def authenticate_owner(type)
-        return unless authenticate
-
-        set_poll
-        @poll.user != @current_user ? error_message(type, :unauthorized) : false
-      end
-
-      def create_question
-        @question = @poll.questions.new(question_params)
-        return render 'api/v1/questions/show' if @question.save
-
-        error_message('error', :unprocessable_entity, @question)
-      end
-
-      def update_question
-        return render('api/v1/questions/show') if @question.update(question_params)
-
-        error_message('error', :unprocessable_entity, @question)
-      end
-
-      def destroy_question
-        return render json: { message: 'the indicated question was eliminated' } if @question.destroy
-
-        error_message('error', :unprocessable_entity, @question)
+      def render_message
+        render error_message('error', :unprocessable_entity, @question)
       end
     end
   end

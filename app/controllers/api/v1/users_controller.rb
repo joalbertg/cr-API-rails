@@ -30,7 +30,7 @@ module Api
       private
 
       def error_message
-        error_message('param', :auth, :unprocessable_entity)
+        render error_message('param', :auth, :unprocessable_entity)
       end
     end
   end
