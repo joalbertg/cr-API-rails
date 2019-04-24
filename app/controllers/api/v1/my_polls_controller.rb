@@ -10,6 +10,8 @@ module Api
         controller.authenticate_owner(@poll.user)
       end
 
+      layout 'api/v1/application'
+
       def index
         @polls = MyPoll.all
       end
