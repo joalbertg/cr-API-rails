@@ -24,18 +24,18 @@ module ErrorHandler
   private
 
   def message
-    @message = MSG[type.to_sym] + param_msg.to_s
-    @message = { errors: @message }
+    @errors << MSG[type.to_sym] + param_msg.to_s
     error_msg
     status_msg
-    @message
+
+    render template: 'api/v1/errors'
   end
 
   def error_msg
     return '' unless type.eql?('error')
 
     response.status = value.first
-    @message[:errors] = value.second.errors.full_messages
+    @errors << value.second.errors.full_messages
   end
 
   def param_msg

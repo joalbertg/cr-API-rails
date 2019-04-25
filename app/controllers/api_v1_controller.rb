@@ -5,16 +5,21 @@ class ApiV1Controller < ApplicationController
   include ErrorHandler
 
   # before_action :authenticate
+  before_action :set_jbuilder_defaults
 
   protected
 
   def authenticate
-    return render error_message('token', :unauthorized) unless Token.token?(params[:token])
+    return error_message('token', :unauthorized) unless Token.token?(params[:token])
 
     @current_user = Token.user
   end
 
   def authenticate_owner(owner)
-    render(error_message('record', :unauthorized)) unless owner == @current_user
+    error_message('record', :unauthorized) unless owner == @current_user
+  end
+
+  def set_jbuilder_defaults
+    @errors = []
   end
 end

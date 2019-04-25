@@ -28,7 +28,7 @@ module Api
 
       # DELETE /polls/1/answers/1
       def destroy
-        return render(error_message('delete', :ok)) if @answer.destroy
+        return error_message('delete', :ok) if @answer.destroy
 
         render_message
       end
@@ -48,7 +48,7 @@ module Api
       end
 
       def render_message
-        render error_message('error', :unprocessable_entity, @answer)
+        error_message('error', :unprocessable_entity, @answer)
       end
     end
   end
