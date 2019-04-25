@@ -23,10 +23,10 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
     end
 
     it 'send description and question´s id' do
-      json_array = JSON.parse(response.body)
-      question = json_array[0]
+      json_array = JSON.parse(response.body)['data']
+      question = json_array[0]['attributes']
 
-      expect(question.keys).to contain_exactly('id', 'description')
+      expect(question.keys).to contain_exactly('id', 'description', 'my_poll_id')
     end
   end
 
@@ -41,7 +41,7 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
     it { expect(response).to have_http_status(200) }
 
     it 'receive the request in json' do
-      json = JSON.parse(response.body)
+      json = JSON.parse(response.body)['data']['attributes']
       expect(json['description']).to eq(@description)
       expect(json['id']).to eq(@question.id)
     end
@@ -71,7 +71,7 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
       end
 
       it 'respond with the question created' do
-        json = JSON.parse(response.body)
+        json = JSON.parse(response.body)['data']['attributes']
         expect(json['description']).to eq(@question.description)
       end
     end
@@ -121,7 +121,7 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
     it { expect(response).to have_http_status(200) }
 
     it 'update the indicated data' do
-      json = JSON.parse(response.body)
+      json = JSON.parse(response.body)['data']['attributes']
       expect(json['description']).to eq(@question.description)
     end
   end

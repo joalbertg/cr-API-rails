@@ -2,6 +2,8 @@
 
 # answer
 class Answer < ActiveRecord::Base
+  include Utility
+
   belongs_to :question
 
   validates :question, presence: true

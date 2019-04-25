@@ -7,6 +7,8 @@ class ApiV1Controller < ApplicationController
   # before_action :authenticate
   before_action :set_jbuilder_defaults
 
+  layout 'api/v1/application'
+
   protected
 
   def authenticate
