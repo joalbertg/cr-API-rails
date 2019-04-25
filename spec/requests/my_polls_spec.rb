@@ -89,6 +89,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
 
       it 'respond with the errors when saving the poll' do
         json = JSON.parse(response.body)
+        puts json
         expect(json.fetch('errors')).to_not be_empty
       end
     end

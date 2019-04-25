@@ -9,7 +9,7 @@ module Api
 
       def create
         # params = { auth: { provider: , uid: } }
-        return error_message unless params[:auth]
+        return render_message unless params[:auth]
 
         @user = User.from_omniauth(params.fetch(:auth))
         @token = TokenService.new(user: user).object
@@ -19,7 +19,7 @@ module Api
 
       def show
         # params = { auth: { provider: , uid: } }
-        return error_message unless params[:auth]
+        return render_message unless params[:auth]
 
         @user = User.from_omniauth(params.fetch(:auth))
         @token = TokenService.new(user: user).object
@@ -29,8 +29,8 @@ module Api
 
       private
 
-      def error_message
-        render error_message('param', :auth, :unprocessable_entity)
+      def render_message
+        error_message('param', :auth, :unprocessable_entity)
       end
     end
   end

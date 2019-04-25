@@ -32,7 +32,7 @@ module Api
       end
 
       def destroy
-        return render(error_message('delete', :ok)) if @poll.destroy
+        return error_message('delete', :ok) if @poll.destroy
 
         render_message
       end
@@ -48,7 +48,7 @@ module Api
       end
 
       def render_message
-        render error_message('error', :unprocessable_entity, @poll)
+        error_message('error', :unprocessable_entity, @poll)
       end
     end
   end
