@@ -4,9 +4,9 @@
 module ErrorHandler
   extend ActiveSupport::Concern
 
-  MSG = { error: '',
-          # destroy: 'You are not authorized to delete this record',
-          param: 'Missing param',
+  # error: '',
+  # destroy: 'You are not authorized to delete this record',
+  MSG = { param: 'Missing param',
           token: 'Invalid token',
           record: 'Unauthorized user to modify this record',
           delete: 'The indicated record was successfully deleted' }.freeze
@@ -24,7 +24,9 @@ module ErrorHandler
   private
 
   def message
-    @errors << MSG[type.to_sym] + param_msg.to_s
+    str = MSG[type.to_sym]
+    @errors << str if str
+    param_msg
     error_msg
     status_msg
 
@@ -35,14 +37,14 @@ module ErrorHandler
     return '' unless type.eql?('error')
 
     response.status = value.first
-    @errors << value.second.errors.full_messages
+    @errors += value.second.errors.full_messages
   end
 
   def param_msg
     return '' unless type.eql?('param')
 
     response.status = value.second
-    " :#{value.first}"
+    @errors << " :#{value.first}"
   end
 
   def status_msg
