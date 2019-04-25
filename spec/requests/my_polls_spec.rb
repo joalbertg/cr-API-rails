@@ -33,7 +33,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
     end
 
     it 'send the attributes of the poll' do
-      json = JSON.parse(response.body)['data']
+      json = JSON.parse(response.body)['data']['attributes']
       attributes = @poll.attributes.except('created_at', 'updated_at').symbolize_keys
 
       expect(json.keys).to contain_exactly('id', 'title', 'description', 'expires_at', 'user_id')
@@ -59,7 +59,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
       end
 
       it 'respond with the poll created' do
-        json = JSON.parse(response.body)['data']
+        json = JSON.parse(response.body)['data']['attributes']
         expect(json['title']).to eq('Hello MyPoll')
       end
     end
@@ -109,7 +109,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
       it { expect(response).to have_http_status(200) }
 
       it 'update the indicated poll' do
-        json = JSON.parse(response.body)['data']
+        json = JSON.parse(response.body)['data']['attributes']
         expect(json.fetch('title')).to eq('Nuevo título')
       end
     end
