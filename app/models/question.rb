@@ -2,6 +2,8 @@
 
 # question model
 class Question < ActiveRecord::Base
+  include Utility
+
   belongs_to :my_poll
   has_many :answers
 

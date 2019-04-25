@@ -2,6 +2,8 @@
 
 # users model
 class User < ActiveRecord::Base
+  include Utility
+
   # -- Relationships --------------------------------------------------------
   has_many :tokens
   has_many :my_polls

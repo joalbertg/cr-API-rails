@@ -2,6 +2,8 @@
 
 # poll model
 class MyPoll < ActiveRecord::Base
+  include Utility
+
   belongs_to :user
   has_many :questions
 
@@ -12,10 +14,5 @@ class MyPoll < ActiveRecord::Base
 
   def active?
     expires_at > DateTime.now
-  end
-
-  def class_name
-    name = self.class.name.underscore
-    name.pluralize.downcase
   end
 end
