@@ -11,4 +11,5 @@ Rails.application.routes.draw do
       end
     end
   end
+  match "*unmatched", via: [:options], to: "api_v1#xhr_options_request"
 end

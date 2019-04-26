@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-json.data '{}'
-json.errors @errors
+# json.data '{}'
+# json.errors @errors
