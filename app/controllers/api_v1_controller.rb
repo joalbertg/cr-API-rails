@@ -6,6 +6,7 @@ class ApiV1Controller < ApplicationController
 
   # before_action :authenticate
   before_action :set_jbuilder_defaults
+  before_action :cors_set_access_control_headers
 
   layout 'api/v1/application'
 
@@ -23,5 +24,15 @@ class ApiV1Controller < ApplicationController
 
   def set_jbuilder_defaults
     @errors = []
+  end
+
+  def cors_set_access_control_headers
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = 'POST,GET,PUT,DELETE,OPTIONS'
+    headers['Access-Control-Allow-Headers'] = 'Origin,Content-Type,Accept,Authorization,Token'
+  end
+
+  def xhr_options_request
+    head :ok
   end
 end
