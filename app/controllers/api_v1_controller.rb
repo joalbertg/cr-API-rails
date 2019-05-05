@@ -19,7 +19,7 @@ class ApiV1Controller < ApplicationController
   end
 
   def authenticate_owner(owner)
-    error_message('record', :unauthorized) unless owner == @current_user
+    error_message('record', :unauthorized) unless owner.eql?(@current_user)
   end
 
   def set_jbuilder_defaults
