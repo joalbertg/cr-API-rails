@@ -30,7 +30,7 @@ module ErrorHandler
     error_msg
     status_msg
 
-    render template: 'api/v1/errors'
+    render 'api/v1/errors'
   end
 
   def error_msg
