@@ -13,7 +13,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
     it { have_http_status(200) }
     it 'send the list of polls' do
       json = JSON.parse(response.body)
-      expect(json.length).to eq(MyPoll.count)
+      expect(json['data'].length).to eq(MyPoll.count)
     end
   end
 
@@ -28,12 +28,12 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
     it { expect(response).to have_http_status(200) }
 
     it 'send the requested poll' do
-      json = JSON.parse(response.body)
+      json = JSON.parse(response.body)['data']
       expect(json['id']).to eq(@poll.id)
     end
 
     it 'send the attributes of the poll' do
-      json = JSON.parse(response.body)
+      json = JSON.parse(response.body)['data']['attributes']
       attributes = @poll.attributes.except('created_at', 'updated_at').symbolize_keys
 
       expect(json.keys).to contain_exactly('id', 'title', 'description', 'expires_at', 'user_id')
@@ -59,7 +59,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
       end
 
       it 'respond with the poll created' do
-        json = JSON.parse(response.body)
+        json = JSON.parse(response.body)['data']['attributes']
         expect(json['title']).to eq('Hello MyPoll')
       end
     end
@@ -89,6 +89,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
 
       it 'respond with the errors when saving the poll' do
         json = JSON.parse(response.body)
+        puts json
         expect(json.fetch('errors')).to_not be_empty
       end
     end
@@ -108,7 +109,7 @@ RSpec.describe Api::V1::MyPollsController, type: :request do
       it { expect(response).to have_http_status(200) }
 
       it 'update the indicated poll' do
-        json = JSON.parse(response.body)
+        json = JSON.parse(response.body)['data']['attributes']
         expect(json.fetch('title')).to eq('Nuevo título')
       end
     end

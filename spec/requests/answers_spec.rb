@@ -29,7 +29,7 @@ RSpec.describe Api::V1::AnswersController, type: :request do
       end
 
       it 'respond with the answer created' do
-        json = JSON.parse(response.body)
+        json = JSON.parse(response.body)['data']['attributes']
         expect(json['id']).to eq(Answer.last.id)
         expect(json['description']).to eq(valid_params[:description])
       end
@@ -64,7 +64,7 @@ RSpec.describe Api::V1::AnswersController, type: :request do
 
     it 'update the indicated data' do
       @answer.reload # optional
-      json = JSON.parse(response.body)
+      json = JSON.parse(response.body)['data']['attributes']
       expect(json['description']).to eq(@answer.description)
     end
   end

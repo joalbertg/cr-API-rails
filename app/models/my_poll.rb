@@ -2,6 +2,8 @@
 
 # poll model
 class MyPoll < ActiveRecord::Base
+  include Utility
+
   belongs_to :user
   has_many :questions
 
