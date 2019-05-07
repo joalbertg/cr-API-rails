@@ -14,4 +14,6 @@ Rails.application.routes.draw do
   match "*unmatched", via: [:options], to: "api_v1#xhr_options_request"
 
   get '/', to: "welcome#index"
+  get '/auth/:provider/callback', to: "sessions#create"
+  # get '/auth/google_oauth2/callback'
 end
