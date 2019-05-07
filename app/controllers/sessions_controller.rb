@@ -4,6 +4,14 @@
 class SessionsController < ApiV1Controller
   def create
     auth = request.env['omniauth.auth']
-    raise auth.to_yaml
+    user = User.from_omniauth(auth)
+    # raise auth.to_yaml
+
+    if user.persisted?
+      session[:user_id] = user.id
+      redirect_to '/', notice: 'you are already logged in'
+    else
+      redirect_to '/', notice: user.errors.full_messages.to_s
+    end
   end
 end
