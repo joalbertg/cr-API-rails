@@ -14,7 +14,7 @@ class ApiV1Controller < ApplicationController
   protected
 
   def authenticate
-    return render error_message('token', :unauthorized) unless Token.token?(params[:token])
+    return error_message('token', :unauthorized) unless Token.token?(params[:token])
 
     @current_user = Token.user
   end
