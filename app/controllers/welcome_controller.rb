@@ -7,6 +7,6 @@ class WelcomeController < ApplicationController
   end
 
   def app
-    
+    @my_apps = current_user.my_apps
   end
 end

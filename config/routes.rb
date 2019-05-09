@@ -2,6 +2,8 @@
 
 # api routes
 Rails.application.routes.draw do
+
+  get "/", to: "welcome#app", constraints: lambda{|request| !request.session[:user_id].blank? }
   get '/', to: "welcome#index"
 
   resources :my_apps, except: %i[show index]
