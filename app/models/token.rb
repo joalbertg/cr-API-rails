@@ -4,6 +4,7 @@
 class Token < ActiveRecord::Base
   # -- Relationships --------------------------------------------------------
   belongs_to :user
+  belongs_to :my_app
 
   def active?
     expires_at > DateTime.now

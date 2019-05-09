@@ -8,6 +8,7 @@ RSpec.describe Token, type: :model do
 
   context 'associations' do
     it { should belong_to(:user) }
+    it { should belong_to(:my_app) }
   end
 
   context 'expiration' do

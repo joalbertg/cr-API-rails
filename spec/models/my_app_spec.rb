@@ -16,7 +16,19 @@ RSpec.describe MyApp, type: :model do
     expect(my_app.secret_key).to_not be_nil
   end
 
-  xit 'find own tokens' do
+  it 'find own tokens' do
+    my_app = FactoryBot.create(:my_app)
+    token = TokenService.new(user: my_app.user, my_app: my_app).object
 
+    expect(my_app.your_token?(token)).to eq(true)
+  end
+
+  it 'invalid token' do
+    my_app = FactoryBot.create(:my_app)
+    second_app = FactoryBot.create(:my_app)
+    token = TokenService.new(user: my_app.user, my_app: second_app).object
+
+    expect(my_app.your_token?(token)).to eq(false)
+    expect(second_app.your_token?(token)).to eq(true)
   end
 end
