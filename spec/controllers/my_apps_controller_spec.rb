@@ -30,12 +30,16 @@ RSpec.describe MyAppsController, type: :controller do
   # adjust the attributes here as well.
   let(:valid_attributes) { { title: 'MyApp 2019', javascript_origins: 'http://localhost:3000' } }
 
-  let(:invalid_attributes) { {} }
+  let(:invalid_attributes) { { title: '' } }
 
   let(:my_app) { FactoryBot.create(:my_app) }
 
-  describe "GET #new" do
-    it "returns a success response" do
+  before :each do
+    request.session[:user_id] = my_app.user.id
+  end
+
+  describe 'GET #new' do
+    it 'returns a success response' do
       get :new, {}
       expect(response).to be_successful
     end
@@ -59,7 +63,7 @@ RSpec.describe MyAppsController, type: :controller do
 
       it "redirects to the created my_app" do
         post :create, {:my_app => valid_attributes}
-        expect(response).to redirect_to(MyApp.last)
+        expect(response).to redirect_to('/')
       end
     end
 
@@ -73,21 +77,19 @@ RSpec.describe MyAppsController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
+      let(:new_attributes) { { title: 'New title' } }
 
       it "updates the requested my_app" do
         # my_app = MyApp.create! valid_attributes
         put :update, {:id => my_app.to_param, :my_app => new_attributes}
         my_app.reload
-        skip("Add assertions for updated state")
+        expect(my_app.title).to eq('New title')
       end
 
       it "redirects to the my_app" do
         # my_app = MyApp.create! valid_attributes
         put :update, {:id => my_app.to_param, :my_app => valid_attributes}
-        expect(response).to redirect_to(my_app)
+        expect(response).to redirect_to('/')
       end
     end
 
@@ -111,7 +113,7 @@ RSpec.describe MyAppsController, type: :controller do
     it "redirects to the my_apps list" do
       # my_app = MyApp.create! valid_attributes
       delete :destroy, {:id => my_app.to_param}
-      expect(response).to redirect_to(my_apps_url)
+      expect(response).to redirect_to('/')
     end
   end
 end

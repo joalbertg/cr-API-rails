@@ -1,5 +1,6 @@
 class MyAppsController < ApiV1Controller
   before_action :set_my_app, only: %i[edit update destroy]
+  before_action :authenticate_user!
 
   # GET /my_apps/new
   def new

@@ -13,4 +13,8 @@ module UserAuthentication
     # nil or logged in user
     User.find_by_id(session[:user_id])
   end
+
+  def authenticate_user!
+    redirect_to('/', notice: 'You have to log in') unless user_signed_in?
+  end
 end
