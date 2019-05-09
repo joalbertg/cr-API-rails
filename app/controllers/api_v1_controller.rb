@@ -3,7 +3,6 @@
 # = api controller
 class ApiV1Controller < ApplicationController
   include ErrorHandler
-  include UserAuthentication
 
   # before_action :authenticate
   before_action :set_jbuilder_defaults

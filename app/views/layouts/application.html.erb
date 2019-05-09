@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>CrApiRails</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-  <header>
-    <nav class='purple darken-4'>
-      <div class='nav-wrapper'>
-        <ul class='hide-on-med-and-down'>
-          <li>
-            <%= link_to 'Home', '/' %>
-          </li>
-          <li>
-            <% if user_signed_in? %>
-              <li> 
-                <%= link_to 'New App', new_my_app_path %>
-              </li>
-              <li>
-                <%= link_to 'Log out', '/logout' %>
-              </li>
-            <% else %>
-              <li>
-                <%= link_to 'Log in', "/auth/google_oauth2" %>
-              </li>
-            <% end %>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </header>
+  <head>
+    <title>CrApiRails</title>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <header>
+      <nav class='purple darken-4'>
+        <div class='nav-wrapper'>
+          <ul class='hide-on-med-and-down'>
+            <li>
+              <%= link_to 'Home', '/' %>
+            </li>
+            <li>
+              <% if user_signed_in? %>
+                <li> 
+                  <%= link_to 'New App', new_my_app_path %>
+                </li>
+                <li>
+                  <%= link_to 'Log out', '/logout' %>
+                </li>
+              <% else %>
+                <li>
+                  <%= link_to 'Log in', "/auth/google_oauth2" %>
+                </li>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
 
-  <div class='container'>
-    <div class='card big-padding'>
-      <%= yield %>
+    <div class='container'>
+      <div class='card big-padding'>
+        <%= yield %>
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>

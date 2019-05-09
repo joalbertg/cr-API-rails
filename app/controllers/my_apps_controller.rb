@@ -1,4 +1,4 @@
-class MyAppsController < ApiV1Controller
+class MyAppsController < ApplicationController
   before_action :set_my_app, only: %i[edit update destroy]
   before_action :authenticate_user!
 

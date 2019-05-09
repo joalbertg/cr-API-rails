@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # welcome controller
-class WelcomeController < ApiV1Controller
+class WelcomeController < ApplicationController
   def index
 
   end
