@@ -28,46 +28,23 @@ RSpec.describe MyAppsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # MyApp. As you add validations to MyApp, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
+  let(:valid_attributes) { { title: 'MyApp 2019', javascript_origins: 'http://localhost:3000' } }
 
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
-  }
+  let(:invalid_attributes) { {} }
 
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # MyAppsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
-
-  describe "GET #index" do
-    it "returns a success response" do
-      MyApp.create! valid_attributes
-      get :index, {}, valid_session
-      expect(response).to be_successful
-    end
-  end
-
-  describe "GET #show" do
-    it "returns a success response" do
-      my_app = MyApp.create! valid_attributes
-      get :show, {:id => my_app.to_param}, valid_session
-      expect(response).to be_successful
-    end
-  end
+  let(:my_app) { FactoryBot.create(:my_app) }
 
   describe "GET #new" do
     it "returns a success response" do
-      get :new, {}, valid_session
+      get :new, {}
       expect(response).to be_successful
     end
   end
 
   describe "GET #edit" do
     it "returns a success response" do
-      my_app = MyApp.create! valid_attributes
-      get :edit, {:id => my_app.to_param}, valid_session
+      # my_app = MyApp.create! valid_attributes
+      get :edit, {:id => my_app.to_param}
       expect(response).to be_successful
     end
   end
@@ -76,19 +53,19 @@ RSpec.describe MyAppsController, type: :controller do
     context "with valid params" do
       it "creates a new MyApp" do
         expect {
-          post :create, {:my_app => valid_attributes}, valid_session
+          post :create, {:my_app => valid_attributes}
         }.to change(MyApp, :count).by(1)
       end
 
       it "redirects to the created my_app" do
-        post :create, {:my_app => valid_attributes}, valid_session
+        post :create, {:my_app => valid_attributes}
         expect(response).to redirect_to(MyApp.last)
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, {:my_app => invalid_attributes}, valid_session
+        post :create, {:my_app => invalid_attributes}
         expect(response).to be_successful
       end
     end
@@ -101,23 +78,23 @@ RSpec.describe MyAppsController, type: :controller do
       }
 
       it "updates the requested my_app" do
-        my_app = MyApp.create! valid_attributes
-        put :update, {:id => my_app.to_param, :my_app => new_attributes}, valid_session
+        # my_app = MyApp.create! valid_attributes
+        put :update, {:id => my_app.to_param, :my_app => new_attributes}
         my_app.reload
         skip("Add assertions for updated state")
       end
 
       it "redirects to the my_app" do
-        my_app = MyApp.create! valid_attributes
-        put :update, {:id => my_app.to_param, :my_app => valid_attributes}, valid_session
+        # my_app = MyApp.create! valid_attributes
+        put :update, {:id => my_app.to_param, :my_app => valid_attributes}
         expect(response).to redirect_to(my_app)
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        my_app = MyApp.create! valid_attributes
-        put :update, {:id => my_app.to_param, :my_app => invalid_attributes}, valid_session
+        # my_app = MyApp.create! valid_attributes
+        put :update, {:id => my_app.to_param, :my_app => invalid_attributes}
         expect(response).to be_successful
       end
     end
@@ -125,17 +102,16 @@ RSpec.describe MyAppsController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested my_app" do
-      my_app = MyApp.create! valid_attributes
+      # my_app = MyApp.create! valid_attributes
       expect {
-        delete :destroy, {:id => my_app.to_param}, valid_session
+        delete :destroy, {:id => my_app.to_param}
       }.to change(MyApp, :count).by(-1)
     end
 
     it "redirects to the my_apps list" do
-      my_app = MyApp.create! valid_attributes
-      delete :destroy, {:id => my_app.to_param}, valid_session
+      # my_app = MyApp.create! valid_attributes
+      delete :destroy, {:id => my_app.to_param}
       expect(response).to redirect_to(my_apps_url)
     end
   end
-
 end

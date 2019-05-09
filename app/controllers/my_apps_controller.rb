@@ -1,16 +1,5 @@
-class MyAppsController < ApplicationController
-  before_action :set_my_app, only: [:show, :edit, :update, :destroy]
-
-  # GET /my_apps
-  # GET /my_apps.json
-  def index
-    @my_apps = MyApp.all
-  end
-
-  # GET /my_apps/1
-  # GET /my_apps/1.json
-  def show
-  end
+class MyAppsController < ApiV1Controller
+  before_action :set_my_app, only: %i[edit update destroy]
 
   # GET /my_apps/new
   def new
@@ -24,11 +13,11 @@ class MyAppsController < ApplicationController
   # POST /my_apps
   # POST /my_apps.json
   def create
-    @my_app = MyApp.new(my_app_params)
+    @my_app = current_user.my_apps.new(my_app_params)
 
     respond_to do |format|
       if @my_app.save
-        format.html { redirect_to @my_app, notice: 'My app was successfully created.' }
+        format.html { redirect_to '/', notice: 'My app was successfully created.' }
         format.json { render :show, status: :created, location: @my_app }
       else
         format.html { render :new }
@@ -42,7 +31,7 @@ class MyAppsController < ApplicationController
   def update
     respond_to do |format|
       if @my_app.update(my_app_params)
-        format.html { redirect_to @my_app, notice: 'My app was successfully updated.' }
+        format.html { redirect_to '/', notice: 'My app was successfully updated.' }
         format.json { render :show, status: :ok, location: @my_app }
       else
         format.html { render :edit }
@@ -56,19 +45,20 @@ class MyAppsController < ApplicationController
   def destroy
     @my_app.destroy
     respond_to do |format|
-      format.html { redirect_to my_apps_url, notice: 'My app was successfully destroyed.' }
+      format.html { redirect_to '/', notice: 'My app was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_my_app
-      @my_app = MyApp.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def my_app_params
-      params.require(:my_app).permit(:user_id, :title, :app_id, :javascript_origins, :secret_key)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_my_app
+    @my_app = MyApp.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def my_app_params
+    params.require(:my_app).permit(:title, :javascript_origins)
+  end
 end

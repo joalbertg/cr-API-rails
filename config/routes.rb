@@ -2,7 +2,9 @@
 
 # api routes
 Rails.application.routes.draw do
-  resources :my_apps
+  get '/', to: "welcome#index"
+
+  resources :my_apps, except: %i[show index]
 
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
@@ -15,7 +17,7 @@ Rails.application.routes.draw do
   end
   match "*unmatched", via: [:options], to: "api_v1#xhr_options_request"
 
-  get '/', to: "welcome#index"
+  
   get '/auth/:provider/callback', to: "sessions#create"
   # get '/auth/google_oauth2/callback'
 
