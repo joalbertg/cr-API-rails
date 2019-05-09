@@ -11,27 +11,17 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :user_id %><br>
-    <%= f.text_field :user_id %>
-  </div>
-  <div class="field">
-    <%= f.label :title %><br>
+  <div class="input-field">
+    <%= f.label :title %>
     <%= f.text_field :title %>
   </div>
-  <div class="field">
-    <%= f.label :app_id %><br>
-    <%= f.text_field :app_id %>
-  </div>
-  <div class="field">
-    <%= f.label :javascript_origins %><br>
+  <div class="input-field">
+    <%= f.label :javascript_origins %>
     <%= f.text_field :javascript_origins %>
+    <p style="margin:0px;padding:0px;font-size:12px;">Separated by commas the origins from which you will send requests for AJAX</p>
   </div>
-  <div class="field">
-    <%= f.label :secret_key %><br>
-    <%= f.text_field :secret_key %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
+
+  <div style="margin-top:1.5em;">
+    <%= f.submit 'Send', class:'btn' %>
   </div>
 <% end %>
