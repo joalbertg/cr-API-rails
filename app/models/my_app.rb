@@ -11,6 +11,7 @@ class MyApp < ActiveRecord::Base
   end
 
   def valid_origin?(domain)
-    javascript_origins.split(',').include?(domain)
+    binding.pry
+    # javascript_origins.try(:split, ',').include?(domain) unless javascript_origins.empty?
   end
 end

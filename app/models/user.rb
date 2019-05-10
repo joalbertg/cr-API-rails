@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   has_many :tokens
   has_many :my_polls
   has_many :my_apps
+  has_many :user_polls
 
   # -- Validations ----------------------------------------------------------
   validates :uid, presence: true
