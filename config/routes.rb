@@ -15,6 +15,7 @@ Rails.application.routes.draw do
         resources :questions, except: %i[new edit]
         resources :answers, only: %i[create update destroy]
       end
+      resources :my_answers, only: :create
     end
   end
   match "*unmatched", via: [:options], to: "api_v1#xhr_options_request"

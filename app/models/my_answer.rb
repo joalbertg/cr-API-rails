@@ -1,4 +1,6 @@
 class MyAnswer < ActiveRecord::Base
+  include Utility
+  
   belongs_to :user_poll
   belongs_to :answer
   belongs_to :question
