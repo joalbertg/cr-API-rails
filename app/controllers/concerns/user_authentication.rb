@@ -6,7 +6,7 @@ module UserAuthentication
 
   def user_signed_in?
     # true if the user is logged in otherwise false
-    !current_user.nil?
+    !current_user.blank?
   end
 
   def current_user

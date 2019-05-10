@@ -13,6 +13,10 @@ class MyApp < ActiveRecord::Base
     tokens.where(tokens: { id: token.id }).any?
   end
 
+  def valid_origin?(domain)
+    javascript_origins.split(',').include?(domain)
+  end
+
   private
 
   def generate_secret_key

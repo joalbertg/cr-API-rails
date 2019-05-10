@@ -28,7 +28,7 @@ class ApiV1Controller < ApplicationController
   end
 
   def cors_set_access_control_headers
-    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Origin'] = request.headers['origin']
     headers['Access-Control-Allow-Methods'] = 'POST,GET,PUT,DELETE,OPTIONS'
     headers['Access-Control-Allow-Headers'] = 'Origin,Content-Type,Accept,Authorization,Token'
   end
@@ -41,7 +41,7 @@ class ApiV1Controller < ApplicationController
     if params.key?(:app_id)
       error_message('app_id', :unauthorized) unless app_id?
     elsif params.key?(:secret_key)
-      error_message('secret', :unauthorized) if secret_key?
+      error_message('secret', :unauthorized) unless secret_key?
     else
       error_message('app', :unauthorized)
     end
@@ -49,11 +49,11 @@ class ApiV1Controller < ApplicationController
 
   def app_id?
     @my_app = MyApp.find_by(app_id: params[:app_id])
-    @my_app.nil? || !@my_app.is_valid_origin?(request.headers['origin']) ? false : true
+    @my_app.blank? || !@my_app.valid_origin?(request.headers['origin']) ? false : true
   end
 
   def secret_key?
     @my_app = MyApp.find_by(secret_key: params[:secret_key])
-    @my_app.nil?
+    @my_app
   end
 end
