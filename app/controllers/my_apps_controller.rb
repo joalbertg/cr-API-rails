@@ -8,8 +8,7 @@ class MyAppsController < ApplicationController
   end
 
   # GET /my_apps/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /my_apps
   # POST /my_apps.json
