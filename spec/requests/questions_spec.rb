@@ -3,7 +3,12 @@
 require 'rails_helper'
 # =
 RSpec.describe Api::V1::QuestionsController, type: :request do
-  let(:my_app) { FactoryBot.create(:my_app) }
+  let(:user1) { create(:user) }
+  let(:valid_attributes_app) { attributes_for(:my_app) }
+
+  subject(:my_app) do
+    MyAppService.new(valid_attributes_app, user1).object
+  end
 
   before :each do
     @token = TokenService.new(user: FactoryBot.create(:user)).object

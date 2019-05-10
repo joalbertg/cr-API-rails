@@ -4,10 +4,15 @@ require 'rails_helper'
 
 describe TokenService do
   let(:user1) { create(:user) }
+  let(:valid_attributes_app) { attributes_for(:my_app) }
   let(:valid_attributes) { attributes_for(:token).merge(user: user1) }
 
   subject(:token) do
     TokenService.new(valid_attributes)
+  end
+
+  let(:my_app) do
+    MyAppService.new(valid_attributes_app, user1).object
   end
 
   describe '#create_object' do

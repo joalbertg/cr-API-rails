@@ -32,7 +32,13 @@ RSpec.describe MyAppsController, type: :controller do
 
   let(:invalid_attributes) { { title: '' } }
 
-  let(:my_app) { FactoryBot.create(:my_app) }
+  # let(:my_app) { FactoryBot.create(:my_app) }
+  let(:user1) { create(:user) }
+  let(:valid_attributes_app) { attributes_for(:my_app) }
+
+  subject(:my_app) do
+    MyAppService.new(valid_attributes_app, user1).object
+  end
 
   before :each do
     request.session[:user_id] = my_app.user.id

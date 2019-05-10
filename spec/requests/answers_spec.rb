@@ -3,7 +3,15 @@
 require 'rails_helper'
 # =
 RSpec.describe Api::V1::AnswersController, type: :request do
-  let(:my_app) { FactoryBot.create(:my_app) }
+  # let(:my_app) { FactoryBot.create(:my_app) }
+  let(:user1) { create(:user) }
+
+  let(:valid_attributes) { attributes_for(:my_app).merge(user: user1) }
+  let(:valid_attributes_app) { attributes_for(:my_app) }
+
+  subject(:my_app) do
+    MyAppService.new(valid_attributes_app, user1).object
+  end
 
   before :each do
     @token = TokenService.new(user: FactoryBot.create(:user)).object
@@ -60,7 +68,10 @@ RSpec.describe Api::V1::AnswersController, type: :request do
     before :each do
       @answer = FactoryBot.create(:answer, question: @question)
       @answer.description = 'New answer'
-      put api_v1_poll_answer_path(@poll, @answer), answer: @answer.as_json, token: @token.token, secret_key: my_app.secret_key
+      put api_v1_poll_answer_path(@poll, @answer),
+          answer: @answer.as_json,
+          token: @token.token,
+          secret_key: my_app.secret_key
     end
 
     it { expect(response).to have_http_status(200) }

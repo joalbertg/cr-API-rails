@@ -14,15 +14,17 @@ class MyAppsController < ApplicationController
   # POST /my_apps
   # POST /my_apps.json
   def create
-    @my_app = current_user.my_apps.new(my_app_params)
+    @my_app_service = MyAppService.new(my_app_params, current_user)
+    # @my_app = current_user.my_apps.new(my_app_params)
 
     respond_to do |format|
-      if @my_app.save
+      if @my_app_service.create_object
+        @my_app = @my_app_service.object
         format.html { redirect_to '/', notice: 'My app was successfully created.' }
         format.json { render :show, status: :created, location: @my_app }
       else
         format.html { render :new }
-        format.json { render json: @my_app.errors, status: :unprocessable_entity }
+        format.json { render json: @my_app_service.errors, status: :unprocessable_entity }
       end
     end
   end

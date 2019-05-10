@@ -15,7 +15,8 @@ class Token < ActiveRecord::Base
       return false unless token_str
 
       @token_data = Token.find_by(token: token_str)
-      token_data.try(:active?) ? true : false
+      # token_data.try(:active?) ? true : false
+      @token_data.blank? || !@token_data.active? ? false : true
     end
 
     def user

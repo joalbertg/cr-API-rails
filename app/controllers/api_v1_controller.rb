@@ -7,14 +7,15 @@ class ApiV1Controller < ApplicationController
   # before_action :authenticate
   before_action :set_jbuilder_defaults
   before_action :cors_set_access_control_headers
-  before_action :authenticate_app
+  before_action :authenticate_app, except: [:xhr_options_request]
 
   layout 'api/v1/application'
 
   protected
 
   def authenticate
-    return error_message('token', :unauthorized) unless Token.token?(params[:token])
+    token = params[:token]
+    return error_message('token', :unauthorized) unless Token.token?(token) || @my_app.your_token?(token)
 
     @current_user = Token.user
   end
