@@ -2,6 +2,12 @@
 
 # api routes
 Rails.application.routes.draw do
+
+  get "/", to: "welcome#app", constraints: lambda{ |rqst| !rqst.session[:user_id].blank? }
+  get '/', to: "welcome#index"
+
+  resources :my_apps, except: %i[show index]
+
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
       resources :users, only: :create
@@ -12,4 +18,10 @@ Rails.application.routes.draw do
     end
   end
   match "*unmatched", via: [:options], to: "api_v1#xhr_options_request"
+
+  
+  get '/auth/:provider/callback', to: "sessions#create"
+  # get '/auth/google_oauth2/callback'
+
+  get '/logout', to: "sessions#destroy"
 end
