@@ -3,6 +3,8 @@
 require 'rails_helper'
 # =
 RSpec.describe Api::V1::QuestionsController, type: :request do
+  let(:my_app) { FactoryBot.create(:my_app) }
+
   before :each do
     @token = TokenService.new(user: FactoryBot.create(:user)).object
     @poll = FactoryBot.create(:poll_with_questions, user: @token.user)
@@ -11,7 +13,7 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
   # -- index ---------------------------------------------------------------
   describe 'GET /polls/:poll_id/questions' do
     before :each do
-      get "/api/v1/polls/#{@poll.id}/questions"
+      get "/api/v1/polls/#{@poll.id}/questions", secret_key: my_app.secret_key
     end
 
     it { expect(response).to have_http_status(200) }
@@ -35,7 +37,7 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
     before :each do
       @question = @poll.questions[0]
       @description = @question.description
-      get api_v1_poll_question_path(@poll, @question)
+      get api_v1_poll_question_path(@poll, @question), secret_key: my_app.secret_key
     end
 
     it { expect(response).to have_http_status(200) }
@@ -57,7 +59,8 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
 
         post api_v1_poll_questions_path(@poll),
              question: @question.as_json,
-             token: @token.token
+             token: @token.token,
+             secret_key: my_app.secret_key
       end
 
       it { expect(response).to have_http_status(200) }
@@ -66,7 +69,8 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
         expect do
           post api_v1_poll_questions_path(@poll),
                question: FactoryBot.build(:question).attributes, # .as_json
-               token: @token.token
+               token: @token.token,
+               secret_key: my_app.secret_key
         end.to change(Question, :count).by(1)
       end
 
@@ -79,7 +83,7 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
     context 'missing params' do
       before :each do
         # post '/api/v1/polls'
-        post api_v1_polls_path
+        post api_v1_polls_path, secret_key: my_app.secret_key
       end
 
       it { expect(response).to have_http_status(401) }
@@ -98,7 +102,8 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
 
         post api_v1_poll_questions_path(@poll),
              question: @question.as_json,
-             token: @token.token
+             token: @token.token,
+             secret_key: my_app.secret_key
       end
 
       it { expect(response).to have_http_status(401) }
@@ -115,7 +120,10 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
     before :each do
       @question = @poll.questions[0]
       @question.description = 'Hola Mundo'
-      patch api_v1_poll_question_path(@poll, @question), question: @question.as_json, token: @token.token
+      patch api_v1_poll_question_path(@poll, @question), 
+            question: @question.as_json, 
+            token: @token.token,
+            secret_key: my_app.secret_key
     end
 
     it { expect(response).to have_http_status(200) }
@@ -133,7 +141,9 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
     end
 
     it 'eliminate the question' do
-      delete api_v1_poll_question_path(@poll, @question), token: @token.token
+      delete api_v1_poll_question_path(@poll, @question), 
+             token: @token.token,
+             secret_key: my_app.secret_key
 
       expect(response).to have_http_status(200)
       expect(Question.where(id: @question.id)). to be_empty
@@ -141,7 +151,9 @@ RSpec.describe Api::V1::QuestionsController, type: :request do
 
     it 'reduces the count of questions in -1' do
       expect do
-        delete api_v1_poll_question_path(@poll, @question), token: @token.token
+        delete api_v1_poll_question_path(@poll, @question),
+               token: @token.token,
+               secret_key: my_app.secret_key
       end.to change(Question, :count).by(-1)
     end
   end

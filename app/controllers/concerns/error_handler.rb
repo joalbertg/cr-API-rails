@@ -9,7 +9,10 @@ module ErrorHandler
   MSG = { param: 'Missing param',
           token: 'Invalid token',
           record: 'Unauthorized user to modify this record',
-          delete: 'The indicated record was successfully deleted' }.freeze
+          delete: 'The indicated record was successfully deleted',
+          app_id: 'App ID invalid or wrong origin',
+          secret: 'Secret key invalid',
+          app: 'You need an application to communicate with the API' }.freeze
 
   attr_reader :type, :value
   # value = param_name || status

@@ -3,10 +3,12 @@
 require 'rails_helper'
 # =
 RSpec.describe Api::V1::UsersController, type: :request do
+  let(:my_app) { FactoryBot.create(:my_app) }
+
   describe 'POST /users' do
     before :each do
       auth = { provider: 'facebook', uid: '123jkfsvjk6', info: { email: 'joa@xy-code.com' } }
-      post '/api/v1/users', auth: auth
+      post '/api/v1/users', auth: auth, secret_key: my_app.secret_key
     end
 
     it { expect(response).to have_http_status(200) }
