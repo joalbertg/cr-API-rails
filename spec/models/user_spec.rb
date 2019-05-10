@@ -8,6 +8,8 @@ RSpec.describe User, type: :model do
   context 'validations' do
     it { should have_many(:tokens) }
     it { should have_many(:my_polls) }
+    it { should have_many(:my_apps) }
+ 
     it { attributes.each { |attr| should validate_presence_of(attr) } }
     it { should validate_uniqueness_of(:email) }
     it { should_not allow_value('liss@co-digo').for(:email) }

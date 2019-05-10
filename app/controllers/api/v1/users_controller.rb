@@ -11,7 +11,7 @@ module Api
         return render_message unless params[:auth]
 
         @user = User.from_omniauth(params.fetch(:auth))
-        @token = TokenService.new(user: @user).object
+        @token = TokenService.new(user: @user, my_app: @my_app).object
 
         render 'api/v1/users/show'
       end

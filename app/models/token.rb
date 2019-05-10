@@ -4,6 +4,7 @@
 class Token < ActiveRecord::Base
   # -- Relationships --------------------------------------------------------
   belongs_to :user
+  belongs_to :my_app
 
   def active?
     expires_at > DateTime.now
@@ -14,7 +15,8 @@ class Token < ActiveRecord::Base
       return false unless token_str
 
       @token_data = Token.find_by(token: token_str)
-      token_data.try(:active?) ? true : false
+      # token_data.try(:active?) ? true : false
+      @token_data.blank? || !@token_data.active? ? false : true
     end
 
     def user

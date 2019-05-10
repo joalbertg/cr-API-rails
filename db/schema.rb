@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190416171532) do
+ActiveRecord::Schema.define(version: 20190509014116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,18 @@ ActiveRecord::Schema.define(version: 20190416171532) do
   end
 
   add_index "answers", ["question_id"], name: "index_answers_on_question_id", using: :btree
+
+  create_table "my_apps", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "title"
+    t.string   "app_id"
+    t.string   "javascript_origins"
+    t.string   "secret_key"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "my_apps", ["user_id"], name: "index_my_apps_on_user_id", using: :btree
 
   create_table "my_polls", force: :cascade do |t|
     t.integer  "user_id"
@@ -51,8 +63,10 @@ ActiveRecord::Schema.define(version: 20190416171532) do
     t.datetime "expires_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "my_app_id"
   end
 
+  add_index "tokens", ["my_app_id"], name: "index_tokens_on_my_app_id", using: :btree
   add_index "tokens", ["user_id"], name: "index_tokens_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
@@ -65,7 +79,9 @@ ActiveRecord::Schema.define(version: 20190416171532) do
   end
 
   add_foreign_key "answers", "questions"
+  add_foreign_key "my_apps", "users"
   add_foreign_key "my_polls", "users"
   add_foreign_key "questions", "my_polls"
+  add_foreign_key "tokens", "my_apps"
   add_foreign_key "tokens", "users"
 end
