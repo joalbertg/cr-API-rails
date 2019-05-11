@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190509014116) do
+ActiveRecord::Schema.define(version: 20190510053259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,18 @@ ActiveRecord::Schema.define(version: 20190509014116) do
   end
 
   add_index "answers", ["question_id"], name: "index_answers_on_question_id", using: :btree
+
+  create_table "my_answers", force: :cascade do |t|
+    t.integer  "user_poll_id"
+    t.integer  "answer_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "question_id"
+  end
+
+  add_index "my_answers", ["answer_id"], name: "index_my_answers_on_answer_id", using: :btree
+  add_index "my_answers", ["question_id"], name: "index_my_answers_on_question_id", using: :btree
+  add_index "my_answers", ["user_poll_id"], name: "index_my_answers_on_user_poll_id", using: :btree
 
   create_table "my_apps", force: :cascade do |t|
     t.integer  "user_id"
@@ -69,6 +81,16 @@ ActiveRecord::Schema.define(version: 20190509014116) do
   add_index "tokens", ["my_app_id"], name: "index_tokens_on_my_app_id", using: :btree
   add_index "tokens", ["user_id"], name: "index_tokens_on_user_id", using: :btree
 
+  create_table "user_polls", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "my_poll_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "user_polls", ["my_poll_id"], name: "index_user_polls_on_my_poll_id", using: :btree
+  add_index "user_polls", ["user_id"], name: "index_user_polls_on_user_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "email"
     t.string   "name"
@@ -79,9 +101,14 @@ ActiveRecord::Schema.define(version: 20190509014116) do
   end
 
   add_foreign_key "answers", "questions"
+  add_foreign_key "my_answers", "answers"
+  add_foreign_key "my_answers", "questions"
+  add_foreign_key "my_answers", "user_polls"
   add_foreign_key "my_apps", "users"
   add_foreign_key "my_polls", "users"
   add_foreign_key "questions", "my_polls"
   add_foreign_key "tokens", "my_apps"
   add_foreign_key "tokens", "users"
+  add_foreign_key "user_polls", "my_polls"
+  add_foreign_key "user_polls", "users"
 end

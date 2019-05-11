@@ -39,6 +39,7 @@ module ErrorHandler
   def error_msg
     return '' unless type.eql?('error')
 
+    # error_message('error', :unprocessable_entity, my_answer)
     response.status = value.first
     @errors += value.second.errors.full_messages
   end
